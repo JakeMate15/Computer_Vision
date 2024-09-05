@@ -1,0 +1,3 @@
+/home/erik/Documents/Computer vision/Supervised Learning Classifier/cmake-build-debug/CMakeFiles/P1.dir
+/home/erik/Documents/Computer vision/Supervised Learning Classifier/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/erik/Documents/Computer vision/Supervised Learning Classifier/cmake-build-debug/CMakeFiles/rebuild_cache.dir
