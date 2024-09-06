@@ -150,8 +150,8 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/home/erik/Documents/Computer vision/Supervised Learning Classifier/cmake-build-debug",
-		"source" : "/home/erik/Documents/Computer vision/Supervised Learning Classifier"
+		"build" : "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier/cmake-build-debug",
+		"source" : "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier"
 	},
 	"version" : 
 	{

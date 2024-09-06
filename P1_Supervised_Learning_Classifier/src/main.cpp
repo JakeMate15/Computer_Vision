@@ -8,6 +8,7 @@ struct Clase {
     int n;
     vector<double> x, y;
     double cX = 0.0, cY = 0.0;
+    string color;
 
     Clase(int n) {
         this->n = n;
@@ -35,12 +36,20 @@ struct Clase {
         return y;
     }
 
+    string getColor() {
+        return color;
+    }
+
     void setX(vector<double> x1) {
         x = x1;
     }
 
     void setY(vector<double> y1) {
         y = y1;
+    }
+
+    void setColor(string color) {
+        this->color = color;
     }
 
     pair<double, double> obtenCentroide() {
@@ -82,19 +91,24 @@ void run (vector<double> vU) {
 
     double size = 50.0;
     set<string> colores;
-    string c = randColor();
-    colores.insert(c);
+    string c;
+
+    auto genColor = [&] () -> string {
+        string color = randColor();
+        while (colores.contains(color)) {
+            color = randColor();
+        }
+        return color;
+    };
 
     plt::clf();
-    plt::scatter(std::vector<double>{vU[0]}, std::vector<double>{vU[1]}, size * 5, {{"color", c}, {"edgecolor", "black"}, {"label", "Vu"}});
 
     int idx = 1;
-    for (const auto &[n, x, y, cX, cY] : clases) {
-        c = randColor();
-        while(colores.count(c)) {
-            c = randColor();
-        }
+    for (auto &[n, x, y, cX, cY, color] : clases) {
+        c = genColor();
+
         colores.insert(c);
+        color = c;
 
         plt::scatter(x, y, size, {{"color", c}, {"edgecolor", "black"}, {"label", "Clase " + to_string(idx)}});
         plt::scatter(std::vector<double>{cX}, std::vector<double>{cY}, size * 5, {{"color", c}, {"edgecolor", "black"}});
@@ -104,14 +118,16 @@ void run (vector<double> vU) {
         idx++;
     }
 
-    double mnIdx = min_element(dist.begin(), dist.end()) - dist.begin();
+    int mnIdx = min_element(dist.begin(), dist.end()) - dist.begin();
     if (dist[mnIdx] > maxDist) {
         cout << "El individuo ingresado no pertence a alguna clase\n";
+        c = genColor();
     } else {
         cout << "El individuo pertence a la clase " << mnIdx + 1 << "\n";
+        c = clases[mnIdx].getColor();
     }
 
-    // plt::text(0.5, -0.5, "Texto debajo del diagrama", {{"horizontalalignment", "center"}, {"verticalalignment", "center"}});
+    plt::scatter(vector<double>{vU[0]}, vector<double>{vU[1]}, size, {{"marker", "x"}, {"color", c}, {"label", "Vu"}});
 
     plt::legend();
     plt::grid(true);

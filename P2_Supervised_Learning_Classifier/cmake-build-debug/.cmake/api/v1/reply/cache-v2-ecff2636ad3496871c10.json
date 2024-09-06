@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/erik/Documents/Computer vision/Supervised Learning Classifier/cmake-build-debug"
+			"value" : "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -543,7 +543,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/erik/Documents/Computer vision/Supervised Learning Classifier/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -603,7 +603,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/erik/Documents/Computer vision/Supervised Learning Classifier"
+			"value" : "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -843,7 +843,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "P1"
+			"value" : "P2"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -1163,7 +1163,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/erik/Documents/Computer vision/Supervised Learning Classifier/cmake-build-debug"
+			"value" : "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier/cmake-build-debug"
 		},
 		{
 			"name" : "P1_IS_TOP_LEVEL",
@@ -1187,7 +1187,43 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/erik/Documents/Computer vision/Supervised Learning Classifier"
+			"value" : "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier"
+		},
+		{
+			"name" : "P2_BINARY_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier/cmake-build-debug"
+		},
+		{
+			"name" : "P2_IS_TOP_LEVEL",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "ON"
+		},
+		{
+			"name" : "P2_SOURCE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",

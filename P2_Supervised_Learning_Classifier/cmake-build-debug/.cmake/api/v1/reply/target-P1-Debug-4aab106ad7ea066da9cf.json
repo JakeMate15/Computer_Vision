@@ -27,25 +27,25 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 15,
+				"line" : 11,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 21,
+				"line" : 14,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 9,
+				"line" : 7,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 18,
+				"line" : 13,
 				"parent" : 0
 			}
 		]
@@ -63,7 +63,7 @@
 			[
 				{
 					"backtrace" : 3,
-					"path" : "/home/erik/Documents/Computer vision/Supervised Learning Classifier/include"
+					"path" : "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier/include"
 				},
 				{
 					"backtrace" : 4,
