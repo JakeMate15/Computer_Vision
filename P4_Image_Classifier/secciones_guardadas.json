@@ -1,30 +1,37 @@
 [
     {
         "imagen": "frutero.jpg",
-        "x": 125,
-        "y": 118,
-        "ancho": 267,
-        "alto": 157
+        "x": 73,
+        "y": 83,
+        "ancho": 681,
+        "alto": 145
     },
     {
         "imagen": "frutero.jpg",
-        "x": 235,
-        "y": 437,
-        "ancho": 120,
-        "alto": 95
+        "x": 214,
+        "y": 445,
+        "ancho": 161,
+        "alto": 141
     },
     {
         "imagen": "frutero.jpg",
-        "x": 483,
-        "y": 490,
-        "ancho": 135,
-        "alto": 74
+        "x": 456,
+        "y": 474,
+        "ancho": 152,
+        "alto": 119
     },
     {
         "imagen": "frutero.jpg",
-        "x": 594,
-        "y": 390,
-        "ancho": 146,
-        "alto": 123
+        "x": 569,
+        "y": 379,
+        "ancho": 169,
+        "alto": 149
+    },
+    {
+        "imagen": "frutero.jpg",
+        "x": 71,
+        "y": 746,
+        "ancho": 820,
+        "alto": 135
     }
 ]

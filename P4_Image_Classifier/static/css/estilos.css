@@ -1,100 +1,161 @@
+/* Variables de colores para mantener la consistencia */
+:root {
+    --color-primario: #2C3E50; /* Azul oscuro formal */
+    --color-secundario: #34495E; /* Azul grisáceo */
+    --color-acento: #2980B9; /* Azul brillante para botones */
+    --color-fondo: #ECF0F1; /* Gris muy claro para el fondo */
+    --color-texto: #2C3E50; /* Mismo que el color primario para el texto */
+    --color-borde: #BDC3C7; /* Gris para bordes */
+    --color-hover: #1A5276; /* Azul más oscuro para efectos hover */
+    --color-hover-boton: #1A5276; /* Azul oscuro para hover en botones */
+}
+
+/* Estilos globales */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
 h1, h2 {
-    color: #333;
+    color: var(--color-primario);
+    margin: 0 0 10px 0;
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 28px;
 }
 
 h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
+    font-size: 24px;
 }
 
 /* Contenedor principal */
-.contenedor-principal {
+.**contenedor-principal** {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding: 20px;
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* Sección superior que divide en dos columnas (izquierda y derecha) */
 .seccion-superior {
     display: flex;
     justify-content: space-between;
+    gap: 20px;
 }
 
 /* Estilos para la sección izquierda (selector, canvas y botones) */
 .seccion-izquierda {
-    flex: 1;
-    margin-right: 20px;
+    flex: 2;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .selector-contenedor {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .selector-contenedor label {
     font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
 }
 
 .selector-contenedor select {
-    padding: 5px;
-    margin-left: 10px;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--color-borde);
+    border-radius: 4px;
+    font-size: 16px;
 }
 
 #btnCargar {
-    padding: 7px 15px;
-    margin-left: 15px;
-    background-color: #007BFF;
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background-color: var(--color-acento);
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
 #btnCargar:hover {
-    background-color: #0056b3;
+    background-color: var(--color-hover-boton);
+}
+
+.canvas-contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
 #canvas {
-    margin-top: 20px;
+    border: 1px solid var(--color-borde);
     border-radius: 4px;
+    /* Removido width y height fijos para mantener tamaño dinámico */
+    max-width: 100%;
+    height: auto; /* Permite que el canvas ajuste su altura automáticamente según el contenido */
 }
 
 .botones {
-    margin-top: 20px;
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-button {
-    padding: 10px 20px;
-    margin-right: 10px;
-    background-color: #28a745;
+.botones button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-acento);
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #218838;
+.botones button:hover {
+    background-color: var(--color-hover-boton);
+}
+
+.botones label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.botones select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--color-borde);
+    border-radius: 4px;
+    font-size: 16px;
 }
 
 /* Sección derecha para la tabla de clases */
 .seccion-derecha {
     flex: 1;
-    max-width: 45%; /* Limitar el ancho máximo de la tabla */
+    background-color: white;
+    padding: 20px;
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #contenedorClases {
@@ -108,16 +169,18 @@ table {
 }
 
 table, th, td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-borde);
 }
 
 th, td {
-    padding: 10px;
+    padding: 12px;
     text-align: center;
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: var(--color-secundario);
+    color: white;
+    font-weight: bold;
 }
 
 td img {
@@ -126,12 +189,19 @@ td img {
     border-radius: 4px;
 }
 
+/* Footer para los resultados del análisis */
 .footer-analisis {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-top: 10px;
+    padding: 30px;
+    background-color: white;
+    border-top: 2px solid var(--color-borde);
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+    border-radius: 8px;
 }
 
+#contenedorResultados {
+    margin-top: 15px;
+}
 
 /* Estilos para la tabla de resultados */
 .tabla-resultados {
@@ -141,13 +211,14 @@ td img {
 }
 
 .tabla-resultados th, .tabla-resultados td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    border: 1px solid var(--color-borde);
+    padding: 10px;
     text-align: center;
 }
 
 .tabla-resultados th {
-    background-color: #f2f2f2;
+    background-color: var(--color-secundario);
+    color: white;
     font-weight: bold;
 }
 
@@ -164,4 +235,15 @@ td img {
     background-color: #d4edda; /* Verde claro */
     color: #155724; /* Verde oscuro para el texto */
     font-weight: bold; /* Opcional: texto en negrita */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .seccion-superior {
+        flex-direction: column;
+    }
+
+    .seccion-izquierda, .seccion-derecha {
+        max-width: 100%;
+    }
 }
