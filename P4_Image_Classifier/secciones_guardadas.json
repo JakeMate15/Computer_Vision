@@ -1,23 +1,23 @@
 [
     {
         "imagen": "frutero.jpg",
-        "x": 220,
-        "y": 433,
-        "ancho": 163,
-        "alto": 128
+        "x": 161,
+        "y": 113,
+        "ancho": 319,
+        "alto": 203
     },
     {
         "imagen": "frutero.jpg",
-        "x": 477,
-        "y": 464,
-        "ancho": 143,
-        "alto": 129
+        "x": 244,
+        "y": 423,
+        "ancho": 144,
+        "alto": 156
     },
     {
         "imagen": "frutero.jpg",
-        "x": 583,
-        "y": 366,
-        "ancho": 136,
-        "alto": 176
+        "x": 486,
+        "y": 472,
+        "ancho": 129,
+        "alto": 153
     }
 ]

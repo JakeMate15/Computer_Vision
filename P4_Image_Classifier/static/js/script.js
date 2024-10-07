@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            alert(data.mensaje);
+            // alert(data.mensaje);
         })
         .catch(error => {
             console.error('Error al enviar las coordenadas:', error);
@@ -299,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        const criterioSeleccionado = selectorCriterio.value;
+        // const criterioSeleccionado = selectorCriterio.value;
 
         let seccionSeleccionada = {
             imagen: selectorImagen.value,
@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
             y: y,
             ancho: ancho,
             alto: alto,
-            criterio: criterioSeleccionado
+            // criterio: criterioSeleccionado
         };
 
         fetch('/analizar-seccion', {
