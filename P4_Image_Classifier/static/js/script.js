@@ -5,10 +5,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnGuardar = document.getElementById('btnGuardar');
     const btnAnalizar = document.getElementById('btnAnalizar');
     const selectorImagen = document.getElementById('selectorImagen');
+    const listaClases = document.getElementById('listaClases');
 
     let imagen = new Image();
     let seleccion = {};
     let seleccionando = false;
+    let imagenCargada = false;
+
+    function manejarError(mensaje, error) {
+        console.error(mensaje, error);
+        alert(mensaje);
+    }
 
     btnCargar.addEventListener('click', function() {
         cargarImagen();
@@ -23,24 +30,28 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data.mensaje);  
+            console.log(data.mensaje);
         })
-        .catch(error => {
-            console.error('Error al limpiar coordenadas:', error);
-            alert('Hubo un error al limpiar las coordenadas');
-        });
-    
-        let nombreImagen = selectorImagen.value;
-        console.log("Imagen seleccionada:", nombreImagen); 
+        .catch(error => manejarError('Error al limpiar coordenadas', error));
+
+        const nombreImagen = selectorImagen.value;
         imagen.src = '/static/imagenes/' + nombreImagen;
         imagen.onload = function() {
             canvas.width = imagen.width;
             canvas.height = imagen.height;
             ctx.drawImage(imagen, 0, 0);
-        }
+            imagenCargada = true;
+        };
+        imagen.onerror = function() {
+            manejarError('Error al cargar la imagen');
+        };
     }
 
     canvas.addEventListener('mousedown', function(e) {
+        if (!imagenCargada) {
+            alert("Primero debe cargar una imagen.");
+            return;
+        }
         const rect = canvas.getBoundingClientRect();
         seleccion.xInicio = e.clientX - rect.left;
         seleccion.yInicio = e.clientY - rect.top;
@@ -74,11 +85,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     btnGuardar.addEventListener('click', function() {
+        if (!imagenCargada) {
+            alert("Primero debe cargar una imagen.");
+            return;
+        }
+
+        if (seleccion.xInicio == null || seleccion.xFin == null || seleccion.yInicio == null || seleccion.yFin == null) {
+            alert("Por favor selecciona una sección antes de guardar.");
+            return;
+        }
+
         const x = Math.min(seleccion.xInicio, seleccion.xFin);
         const y = Math.min(seleccion.yInicio, seleccion.yFin);
         const ancho = Math.abs(seleccion.xFin - seleccion.xInicio);
         const alto = Math.abs(seleccion.yFin - seleccion.yInicio);
-    
+
+        if (ancho === 0 || alto === 0) {
+            alert("La selección no es válida.");
+            return;
+        }
+
+        mostrarSeleccionRecortada(x, y, ancho, alto);
+
         let datos = {
             imagen: selectorImagen.value,
             x: x,
@@ -86,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ancho: ancho,
             alto: alto
         };
-    
+
         fetch('/guardar-coordenadas', {
             method: 'POST',
             headers: {
@@ -99,26 +127,58 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(data.mensaje);
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error al enviar las coordenadas:', error);
             alert('Error al enviar las coordenadas');
         });
     });
-    
+
+    function mostrarSeleccionRecortada(x, y, ancho, alto) {
+        const canvasTemp = document.createElement('canvas');
+        const ctxTemp = canvasTemp.getContext('2d');
+        canvasTemp.width = ancho;
+        canvasTemp.height = alto;
+
+        ctxTemp.drawImage(imagen, x, y, ancho, alto, 0, 0, ancho, alto);
+
+        const imgElemento = document.createElement('img');
+        imgElemento.src = canvasTemp.toDataURL('image/png');
+        imgElemento.width = 100;
+
+        const fila = document.createElement('tr');
+
+        const celdaClase = document.createElement('td');
+        celdaClase.textContent = `Clase ${listaClases.rows.length + 1}`;
+
+        const celdaImagen = document.createElement('td');
+        celdaImagen.appendChild(imgElemento);
+
+        fila.appendChild(celdaClase);
+        fila.appendChild(celdaImagen);
+
+        listaClases.appendChild(fila);
+    }
 
     btnAnalizar.addEventListener('click', function() {
-        // Verificar si una sección ha sido seleccionada
+        if (!imagenCargada) {
+            alert("Primero debe cargar una imagen.");
+            return;
+        }
+
         if (!seleccion.xInicio || !seleccion.xFin || !seleccion.yInicio || !seleccion.yFin) {
             alert("Por favor selecciona una sección antes de analizar.");
             return;
         }
-    
-        // Obtener las coordenadas de la sección seleccionada
+
         const x = Math.min(seleccion.xInicio, seleccion.xFin);
         const y = Math.min(seleccion.yInicio, seleccion.yFin);
         const ancho = Math.abs(seleccion.xFin - seleccion.xInicio);
         const alto = Math.abs(seleccion.yFin - seleccion.yInicio);
-    
-        // Crear un objeto que contenga la información de la sección seleccionada
+
+        if (ancho === 0 || alto === 0) {
+            alert("La selección no es válida.");
+            return;
+        }
+
         let seccionSeleccionada = {
             imagen: selectorImagen.value,
             x: x,
@@ -126,8 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ancho: ancho,
             alto: alto
         };
-    
-        // Enviar la sección seleccionada al servidor para análisis
+
         fetch('/analizar-seccion', {
             method: 'POST',
             headers: {
@@ -137,19 +196,15 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            alert(data.mensaje);  // Muestra un mensaje de éxito
+            alert(data.mensaje);
             if (data.resultado) {
                 let resultadoImg = new Image();
                 resultadoImg.src = '/' + data.resultado;
                 resultadoImg.onload = function() {
-                    ctx.drawImage(resultadoImg, 0, 0);  // Mostrar imagen resultante del análisis en el canvas
-                }
+                    ctx.drawImage(resultadoImg, 0, 0);
+                };
             }
         })
-        .catch(error => {
-            console.error('Error al analizar la sección:', error);
-            alert('Hubo un error durante el análisis');
-        });
+        .catch(error => manejarError('Error al analizar la sección', error));
     });
-    
 });

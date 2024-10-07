@@ -1,6 +1,11 @@
+import base64
+import io
 from flask import Flask, render_template, request, jsonify
 import os
 import json
+import cv2
+from werkzeug.utils import send_file
+
 import clasificador
 
 app = Flask(__name__)
@@ -18,32 +23,46 @@ if not os.path.exists(ARCHIVO_SECCIONES):
     with open(ARCHIVO_SECCIONES, 'w') as archivo:
         json.dump([], archivo)
 
+
 @app.route('/guardar-coordenadas', methods=['POST'])
 def guardar_coordenadas():
-    datos = request.get_json()  
-    imagen = datos.get('imagen')
-    x = datos.get('x')
-    y = datos.get('y')
-    ancho = datos.get('ancho')
-    alto = datos.get('alto')
+    try:
+        datos = request.get_json()
 
-    nueva_seccion = {
-        "imagen": imagen,
-        "x": x,
-        "y": y,
-        "ancho": ancho,
-        "alto": alto
-    }
+        # Validar los datos recibidos
+        if not datos:
+            return jsonify({"mensaje": "No se han recibido datos"}), 400
 
-    with open(ARCHIVO_SECCIONES, 'r+') as archivo:
-        secciones = json.load(archivo)  
-        secciones.append(nueva_seccion) 
-        archivo.seek(0) 
-        json.dump(secciones, archivo, indent=4)  
+        imagen = datos.get('imagen')
+        x = int(datos.get('x'))
+        y = int(datos.get('y'))
+        ancho = int(datos.get('ancho'))
+        alto = int(datos.get('alto'))
 
-    print(f"Coordenadas guardadas para la imagen {imagen}: {nueva_seccion}")
+        if not all([imagen, x, y, ancho, alto]):
+            return jsonify({"mensaje": "Datos incompletos para procesar la imagen"}), 400
 
-    return jsonify({"mensaje": "Coordenadas enviadas y guardadas correctamente"}), 200
+        nueva_seccion = {
+            "imagen": imagen,
+            "x": x,
+            "y": y,
+            "ancho": ancho,
+            "alto": alto
+        }
+
+        # Guardar las coordenadas en un archivo o base de datos (aquí un archivo JSON)
+        with open(ARCHIVO_SECCIONES, 'r+') as archivo:
+            secciones = json.load(archivo)
+            secciones.append(nueva_seccion)
+            archivo.seek(0)
+            json.dump(secciones, archivo, indent=4)
+
+        return jsonify({"mensaje": "Coordenadas enviadas y guardadas correctamente"}), 200
+
+    except Exception as e:
+        print(f"Error al procesar la imagen: {e}")
+        return jsonify({"mensaje": "Ocurrió un error al guardar las coordenadas"}), 500
+
 
 @app.route('/limpiar-coordenadas', methods=['POST'])
 def limpiar_coordenadas():
