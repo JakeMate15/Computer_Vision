@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Aplicación de Análisis de Imágenes</title>
+    <link rel="stylesheet" href="../static/css/estilos.css">
+</head>
+<body>
+    <h1>Selecciona una imagen</h1>
+
+    <select id="selectorImagen">
+        {% for imagen in imagenes %}
+        <option value="{{ imagen }}">{{ imagen }}</option>
+        {% endfor %}
+    </select>    
+    
+    <button id="btnCargar">Cargar Imagen</button>
+    <br><br>
+    <canvas id="canvas" width="800" height="600" style="border:1px solid #000;"></canvas>
+    <br>
+    <button id="btnGuardar">Guardar Coordenadas</button>
+    <button id="btnAnalizar">Analizar Sección</button>
+    <script src="../static/js/script.js"></script>
+</body>
+</html>

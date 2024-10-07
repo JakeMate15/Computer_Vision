@@ -1,0 +1,23 @@
+[
+    {
+        "imagen": "frutero.jpg",
+        "x": 217,
+        "y": 436.125,
+        "ancho": 153,
+        "alto": 129
+    },
+    {
+        "imagen": "frutero.jpg",
+        "x": 600,
+        "y": 373.125,
+        "ancho": 129,
+        "alto": 144
+    },
+    {
+        "imagen": "frutero.jpg",
+        "x": 460,
+        "y": 467.125,
+        "ancho": 155,
+        "alto": 113
+    }
+]
