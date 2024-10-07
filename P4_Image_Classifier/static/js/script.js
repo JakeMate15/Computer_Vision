@@ -170,6 +170,57 @@ document.addEventListener('DOMContentLoaded', function() {
         listaClases.appendChild(fila);
     }
 
+    // Función actualizada para mostrar los resultados del análisis
+    function mostrarResultadosAnalisis(data) {
+        contenedorResultados.innerHTML = ''; // Limpiar resultados anteriores
+
+        // Crear la tabla
+        const table = document.createElement('table');
+        table.classList.add('tabla-resultados');
+
+        // Crear el encabezado de la tabla
+        const header = document.createElement('tr');
+        header.innerHTML = `
+            <th>Clase</th>
+            <th>Distancia Mahalanobis</th>
+            <th>Distancia Euclidiana</th>
+            <th>Probabilidad</th>
+        `;
+        table.appendChild(header);
+
+        // Iterar sobre los resultados y agregar filas a la tabla
+        data.resultados.forEach((resultado, index) => {
+            const row = document.createElement('tr');
+
+            const claseCell = document.createElement('td');
+            claseCell.textContent = `Clase ${index + 1}`;
+
+            const mahalaCell = document.createElement('td');
+            // Formatear a 4 decimales
+            mahalaCell.textContent = resultado.mahalanobis_distance.toFixed(4);
+
+            const euclidCell = document.createElement('td');
+            euclidCell.textContent = resultado.euclidean_distance.toFixed(4);
+
+            const probCell = document.createElement('td');
+            // Formatear la probabilidad en notación científica si es muy pequeña
+            if (resultado.probabilidad < 1e-4) {
+                probCell.textContent = resultado.probabilidad.toExponential(2);
+            } else {
+                probCell.textContent = resultado.probabilidad.toFixed(6);
+            }
+
+            row.appendChild(claseCell);
+            row.appendChild(mahalaCell);
+            row.appendChild(euclidCell);
+            row.appendChild(probCell);
+
+            table.appendChild(row);
+        });
+
+        contenedorResultados.appendChild(table);
+    }
+
     btnAnalizar.addEventListener('click', function() {
         if (!imagenCargada) {
             alert("Primero debe cargar una imagen.");
@@ -211,59 +262,10 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            // mostrarResultadosAnalisis(data);
+            // Llamar a la función para mostrar los resultados en la tabla
+            mostrarResultadosAnalisis(data);
             console.log(data);
         })
         .catch(error => manejarError('Error al analizar la sección', error));
     });
-
-    function mostrarResultadosAnalisis(data) {
-        contenedorResultados.innerHTML = ''; // Limpiar resultados anteriores
-
-        // Crear la tabla
-        const table = document.createElement('table');
-        table.classList.add('tabla-resultados');
-
-        // Crear el encabezado de la tabla
-        const header = document.createElement('tr');
-        header.innerHTML = `
-            <th>Clase</th>
-            <th>Probabilidad Normalizada</th>
-            <th>Pertenece a la Clase</th>
-        `;
-        table.appendChild(header);
-
-        // Iterar sobre las clases y agregar filas a la tabla
-        data.classes.forEach((classResult) => {
-            const row = document.createElement('tr');
-
-            const classCell = document.createElement('td');
-            classCell.textContent = `Clase ${classResult.class_index + 1}`;
-
-            const probabilityNormCell = document.createElement('td');
-            probabilityNormCell.textContent = classResult.probability_normalized.toFixed(2) + '%';
-
-            const belongsCell = document.createElement('td');
-            belongsCell.textContent = classResult.belongs_to_class ? 'Sí' : 'No';
-
-            row.appendChild(classCell);
-            row.appendChild(probabilityNormCell);
-            row.appendChild(belongsCell);
-
-            table.appendChild(row);
-        });
-
-        contenedorResultados.appendChild(table);
-
-        // Mostrar un resumen indicando la clase asignada
-        const summary = document.createElement('p');
-        if (data.belongs_to_any_class) {
-            const assignedClassIndex = data.assigned_class + 1;
-            summary.textContent = `El punto pertenece a la Clase ${assignedClassIndex} con una probabilidad de ${data.classes[data.assigned_class].probability_normalized.toFixed(2)}%.`;
-        } else {
-            summary.textContent = 'El punto no pertenece a ninguna clase.';
-        }
-        contenedorResultados.appendChild(summary);
-    }
-
 });
