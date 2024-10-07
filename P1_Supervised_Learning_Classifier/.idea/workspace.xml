@@ -83,7 +83,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/erik/Documents/Computer vision/P1_Supervised_Learning_Classifier",
+    "last_opened_file_path": "/home/erik/Documents/Computer vision/P2_Supervised_Learning_Classifier",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -93,6 +93,11 @@
   }
 }]]></component>
   <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="P1" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="P1" TARGET_NAME="P1" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="P1" RUN_TARGET_NAME="P1">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -116,6 +121,11 @@
       <workItem from="1725638617389" duration="197000" />
       <workItem from="1725643092547" duration="1235000" />
       <workItem from="1725645029088" duration="61000" />
+      <workItem from="1725645588544" duration="4436000" />
+      <workItem from="1725650133763" duration="64000" />
+      <workItem from="1725993027774" duration="429000" />
+      <workItem from="1726017157162" duration="264000" />
+      <workItem from="1727190452702" duration="22000" />
     </task>
     <servers />
   </component>

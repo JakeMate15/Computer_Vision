@@ -32,6 +32,7 @@ struct Clase {
     vector<double> getX() {
         return x;
     }
+
     vector<double> getY() {
         return y;
     }
@@ -117,6 +118,11 @@ void run (vector<double> vU) {
 
         idx++;
     }
+
+    for (auto x: dist) {
+        cout << x << " ";
+    }
+    cout << "\n";
 
     int mnIdx = min_element(dist.begin(), dist.end()) - dist.begin();
     if (dist[mnIdx] > maxDist) {
