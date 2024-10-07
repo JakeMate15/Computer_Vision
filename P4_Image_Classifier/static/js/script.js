@@ -170,11 +170,17 @@ document.addEventListener('DOMContentLoaded', function() {
         listaClases.appendChild(fila);
     }
 
-    // Función actualizada para mostrar los resultados del análisis
     function mostrarResultadosAnalisis(data) {
+        const contenedorResultados = document.getElementById('contenedorResultados');
         contenedorResultados.innerHTML = ''; // Limpiar resultados anteriores
 
-        // Crear la tabla
+        // Verificar que haya resultados
+        if (!data.resultados || data.resultados.length === 0) {
+            contenedorResultados.innerHTML = '<p>No hay resultados para mostrar.</p>';
+            return;
+        }
+
+        // Crear la tabla completa de resultados
         const table = document.createElement('table');
         table.classList.add('tabla-resultados');
 
@@ -184,9 +190,14 @@ document.addEventListener('DOMContentLoaded', function() {
             <th>Clase</th>
             <th>Distancia Mahalanobis</th>
             <th>Distancia Euclidiana</th>
-            <th>Probabilidad</th>
+            <th>Probabilidad (%)</th>
         `;
         table.appendChild(header);
+
+        // Arrays para almacenar las métricas
+        const distanciasMahalanobis = [];
+        const distanciasEuclidianas = [];
+        const probabilidades = [];
 
         // Iterar sobre los resultados y agregar filas a la tabla
         data.resultados.forEach((resultado, index) => {
@@ -198,17 +209,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const mahalaCell = document.createElement('td');
             // Formatear a 4 decimales
             mahalaCell.textContent = resultado.mahalanobis_distance.toFixed(4);
+            distanciasMahalanobis.push({ valor: resultado.mahalanobis_distance, clase: index + 1 });
 
             const euclidCell = document.createElement('td');
             euclidCell.textContent = resultado.euclidean_distance.toFixed(4);
+            distanciasEuclidianas.push({ valor: resultado.euclidean_distance, clase: index + 1 });
 
             const probCell = document.createElement('td');
-            // Formatear la probabilidad en notación científica si es muy pequeña
+            // Asumimos que la probabilidad está en el rango 0-100
             if (resultado.probabilidad < 1e-4) {
                 probCell.textContent = resultado.probabilidad.toExponential(2);
             } else {
-                probCell.textContent = resultado.probabilidad.toFixed(6);
+                probCell.textContent = `${resultado.probabilidad.toFixed(2)}%`;
             }
+            probabilidades.push({ valor: resultado.probabilidad, clase: index + 1 });
 
             row.appendChild(claseCell);
             row.appendChild(mahalaCell);
@@ -219,7 +233,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         contenedorResultados.appendChild(table);
+
+        // Calcular las métricas requeridas
+        const minMahalanobisObj = distanciasMahalanobis.reduce((min, current) => current.valor < min.valor ? current : min, distanciasMahalanobis[0]);
+        const minEuclideanObj = distanciasEuclidianas.reduce((min, current) => current.valor < min.valor ? current : min, distanciasEuclidianas[0]);
+        const maxProbabilidadObj = probabilidades.reduce((max, current) => current.valor > max.valor ? current : max, probabilidades[0]);
+
+        // Verificar si cumplen con los umbrales
+        const cumpleMahalanobis = minMahalanobisObj.valor < 2.5;
+        const cumpleEuclidean = minEuclideanObj.valor < 100;
+        const cumpleProbabilidad = maxProbabilidadObj.valor > 75;
+
+        // Crear un contenedor para los resultados destacados
+        const contenedorResumen = document.createElement('div');
+        contenedorResumen.classList.add('resumen-resultados');
+
+        // Construir el contenido del resumen
+        let resumenHTML = '<h3>Clases Destacadas por Criterio:</h3><ul>';
+
+        if (cumpleMahalanobis) {
+            resumenHTML += `<li><strong>Distancia Mahalanobis:</strong> Clase ${minMahalanobisObj.clase} (Distancia: ${minMahalanobisObj.valor.toFixed(4)})</li>`;
+        } else {
+            resumenHTML += `<li><strong>Distancia Mahalanobis:</strong> No cumple con el umbral (< 2.5).</li>`;
+        }
+
+        if (cumpleEuclidean) {
+            resumenHTML += `<li><strong>Distancia Euclidiana:</strong> Clase ${minEuclideanObj.clase} (Distancia: ${minEuclideanObj.valor.toFixed(4)})</li>`;
+        } else {
+            resumenHTML += `<li><strong>Distancia Euclidiana:</strong> No cumple con el umbral (< 100).</li>`;
+        }
+
+        if (cumpleProbabilidad) {
+            resumenHTML += `<li><strong>Probabilidad:</strong> Clase ${maxProbabilidadObj.clase} (Probabilidad: ${maxProbabilidadObj.valor.toFixed(2)}%)</li>`;
+        } else {
+            resumenHTML += `<li><strong>Probabilidad:</strong> No cumple con el umbral (> 75).</li>`;
+        }
+
+        resumenHTML += '</ul>';
+
+        contenedorResumen.innerHTML = resumenHTML;
+
+        // Agregar el resumen al contenedor de resultados
+        contenedorResultados.appendChild(contenedorResumen);
     }
+
 
     btnAnalizar.addEventListener('click', function() {
         if (!imagenCargada) {

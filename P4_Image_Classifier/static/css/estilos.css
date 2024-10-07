@@ -158,3 +158,10 @@ td img {
 .tabla-resultados tr:hover {
     background-color: #e2e2e2;
 }
+
+/* Clase para resaltar celdas en verde */
+.highlight-green {
+    background-color: #d4edda; /* Verde claro */
+    color: #155724; /* Verde oscuro para el texto */
+    font-weight: bold; /* Opcional: texto en negrita */
+}
