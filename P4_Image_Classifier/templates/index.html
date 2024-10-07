@@ -6,49 +6,58 @@
     <link rel="stylesheet" href="../static/css/estilos.css">
 </head>
 <body>
-    <h1>Selecciona una imagen</h1>
+    <div class="contenedor-principal">
+        <!-- Sección superior dividida en dos -->
+        <div class="seccion-superior">
+            <!-- Parte izquierda (selector de imagen, canvas, botones) -->
+            <div class="seccion-izquierda">
+                <h1>Selecciona una imagen</h1>
+                <div class="selector-contenedor">
+                    <label for="selectorImagen">Imágenes:</label>
+                    <select id="selectorImagen">
+                        {% for imagen in imagenes %}
+                        <option value="{{ imagen }}">{{ imagen }}</option>
+                        {% endfor %}
+                    </select>
+                    <button id="btnCargar">Cargar Imagen</button>
+                </div>
 
-    <!-- Selector de imagenes -->
-    <select id="selectorImagen">
-        {% for imagen in imagenes %}
-        <option value="{{ imagen }}">{{ imagen }}</option>
-        {% endfor %}
-    </select>
+                <!-- Canvas donde se carga la imagen -->
+                <canvas id="canvas" width="800" height="600" style="border:1px solid #000;"></canvas>
 
-    <button id="btnCargar">Cargar Imagen</button>
-    <br><br>
+                <!-- Botones para guardar y analizar -->
+                <div class="botones">
+                    <button id="btnGuardar">Guardar Coordenadas</button>
+                    <button id="btnAnalizar">Analizar Sección</button>
+                </div>
+            </div>
 
-    <!-- Canvas donde se carga la imagen -->
-    <canvas id="canvas" width="800" height="600" style="border:1px solid #000;"></canvas>
-    <br>
+            <!-- Parte derecha (tabla de clases) -->
+            <div class="seccion-derecha">
+                <h2>Clases generadas</h2>
+                <div id="contenedorClases">
+                    <table id="tablaClases">
+                        <thead>
+                            <tr>
+                                <th>Clase</th>
+                                <th>Imagen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaClases">
+                            <!-- Aquí se agregarán las clases dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-    <!-- Botones para guardar y analizar -->
-    <button id="btnGuardar">Guardar Coordenadas</button>
-    <button id="btnAnalizar">Analizar Sección</button>
-
-    <br><br>
-
-    <!-- Contenedor para mostrar las clases guardadas en una tabla -->
-    <div id="contenedorClases">
-        <h2>Clases generadas</h2>
-        <table id="tablaClases">
-            <thead>
-                <tr>
-                    <th>Clase</th>
-                    <th>Imagen</th>
-                </tr>
-            </thead>
-            <tbody id="listaClases">
-                <!-- Aquí se agregarán las clases dinámicamente -->
-            </tbody>
-        </table>
-    </div>
-
-    <br><br>
-
-    <!-- Contenedor para mostrar las imágenes recortadas -->
-    <div id="contenedorSeleccion" style="display: flex; flex-wrap: wrap;">
-        <!-- Aquí se agregarán las imágenes recortadas -->
+        <!-- Sección inferior para mostrar los resultados del análisis -->
+        <div class="seccion-inferior">
+            <h2>Resultados del análisis</h2>
+            <div id="contenedorResultados">
+                <!-- Aquí se mostrarán los resultados del análisis (imágenes o información) -->
+            </div>
+        </div>
     </div>
 
     <!-- Script principal -->

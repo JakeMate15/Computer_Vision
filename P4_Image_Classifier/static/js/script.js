@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => manejarError('Error al limpiar coordenadas', error));
 
+        listaClases.innerHTML = '';
+
         const nombreImagen = selectorImagen.value;
         imagen.src = '/static/imagenes/' + nombreImagen;
         imagen.onload = function() {

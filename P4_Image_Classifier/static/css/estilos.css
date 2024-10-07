@@ -1,108 +1,148 @@
-/* General Styles */
+/* General */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    text-align: center;
+    background-color: #f4f4f9;
+}
+
+h1, h2 {
+    color: #333;
 }
 
 h1 {
-    color: #4a4a4a;
-    margin-top: 20px;
-    font-weight: 300;
-    font-size: 28px;
+    font-size: 24px;
 }
 
-#selectorImagen {
-    padding: 10px;
-    font-size: 16px;
-    margin: 20px;
-    width: 250px;
+h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+/* Contenedor principal */
+.contenedor-principal {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Altura de toda la ventana */
+}
+
+/* Sección superior que divide en dos columnas (izquierda y derecha) */
+.seccion-superior {
+    display: flex;
+    flex: 2;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* Estilos para la sección izquierda (selector, canvas y botones) */
+.seccion-izquierda {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.selector-contenedor {
+    margin-bottom: 20px;
+}
+
+.selector-contenedor label {
+    font-weight: bold;
+}
+
+.selector-contenedor select {
+    padding: 5px;
+    margin-left: 10px;
+}
+
+#btnCargar {
+    padding: 7px 15px;
+    margin-left: 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
     border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    color: #333;
+    cursor: pointer;
+}
+
+#btnCargar:hover {
+    background-color: #0056b3;
+}
+
+#canvas {
+    margin-top: 20px;
+    border-radius: 4px;
+}
+
+/* Botones debajo del canvas */
+.botones {
+    margin-top: 20px;
 }
 
 button {
     padding: 10px 20px;
-    font-size: 16px;
+    margin-right: 10px;
+    background-color: #28a745;
+    color: white;
     border: none;
     border-radius: 4px;
-    margin: 10px;
     cursor: pointer;
-    background-color: #4a90e2;
-    color: white;
-    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #357abd;
+    background-color: #218838;
 }
 
-/* Container for displaying the image and size info */
-#infoImagen {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #666;
+/* Sección derecha para la tabla de clases */
+.seccion-derecha {
+    flex: 1;
+    max-width: 45%; /* Limitar el ancho máximo de la tabla */
 }
 
-canvas {
-    margin-top: 20px;
-    border: 2px solid #bbb;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+#contenedorClases {
+    overflow-x: auto;
 }
 
-/* Layout container */
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-#tamanoImagen {
-    font-weight: bold;
-    color: #333;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 24px;
-    }
-
-    #selectorImagen {
-        width: 200px;
-    }
-
-    button {
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-
-    canvas {
-        width: 100%;
-        height: auto;
-    }
-}
-
-#tablaClases {
+table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
 }
 
-#tablaClases, #tablaClases th, #tablaClases td {
-    border: 1px solid black;
+table, th, td {
+    border: 1px solid #ddd;
 }
 
-#tablaClases th, #tablaClases td {
-    padding: 8px;
+th, td {
+    padding: 10px;
     text-align: center;
 }
 
-#tablaClases img {
-    max-width: 100px;
+th {
+    background-color: #f2f2f2;
 }
 
+td img {
+    width: 80px;
+    height: auto;
+    border-radius: 4px;
+}
+
+/* Sección inferior para los resultados del análisis */
+.seccion-inferior {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #ddd;
+    overflow-y: auto;
+}
+
+#contenedorResultados {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#contenedorResultados img {
+    width: 150px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
