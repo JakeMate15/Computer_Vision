@@ -80,18 +80,24 @@ def procesar():
     y = datos['y']
     ancho = datos['ancho']
     alto = datos['alto']
-    
+
     with open(ARCHIVO_SECCIONES, 'r') as archivo:
         coordenadas_guardadas = json.load(archivo)
 
-    # print("hola\n\n\n\n\n\n\n\n")
+    resAnalisis = clasificador.analisis(imagen, coordenadas_guardadas, x, y, ancho, alto)
+    res = resAnalisis.tolist()
 
-    # resultado = clas.realizar_analisis(imagen, coordenadas_guardadas, x, y, ancho, alto)
-    res = clasificador.analisis(imagen, coordenadas_guardadas, x, y, ancho, alto)
+    resultados_json = []
+    for resultado in res:
+        resultado_dict = {
+            "mahalanobis_distance": resultado[0],
+            "euclidean_distance": resultado[1],
+            "probabilidad": resultado[2]
+        }
+        resultados_json.append(resultado_dict)
 
-    print(res)
-
-    return jsonify({"mensaje": "Análisis completado"}), 200
+    # Devolver la respuesta JSON
+    return jsonify({"resultados": resultados_json}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

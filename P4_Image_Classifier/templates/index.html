@@ -25,10 +25,16 @@
                 <!-- Canvas donde se carga la imagen -->
                 <canvas id="canvas" width="800" height="600" style="border:1px solid #000;"></canvas>
 
-                <!-- Botones para guardar y analizar -->
+                <!-- Botones y opciones para guardar y analizar -->
                 <div class="botones">
                     <button id="btnGuardar">Guardar Coordenadas</button>
                     <button id="btnAnalizar">Analizar Sección</button>
+                    <label for="selectorCriterio">Criterio de Clasificación:</label>
+                    <select id="selectorCriterio">
+                        <option value="probabilidad">Probabilidad</option>
+                        <option value="mahalanobis">Distancia Mahalanobis</option>
+                        <option value="euclidiana">Distancia Euclidiana</option>
+                    </select>
                 </div>
             </div>
 
@@ -50,15 +56,16 @@
                 </div>
             </div>
         </div>
-
-        <!-- Sección inferior para mostrar los resultados del análisis -->
-        <div class="seccion-inferior">
-            <h2>Resultados del análisis</h2>
-            <div id="contenedorResultados">
-                <!-- Aquí se mostrarán los resultados del análisis (imágenes o información) -->
-            </div>
-        </div>
     </div>
+
+    <!-- Footer para los resultados del análisis -->
+    <footer class="footer-analisis">
+        <h2>Resultados del análisis</h2>
+        <div id="contenedorResultados">
+            <!-- Aquí se mostrarán los resultados del análisis (imágenes o información) -->
+        </div>
+    </footer>
+
 
     <!-- Script principal -->
     <script src="../static/js/script.js"></script>

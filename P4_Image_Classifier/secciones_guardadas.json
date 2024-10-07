@@ -1,1 +1,23 @@
-[]
+[
+    {
+        "imagen": "frutero.jpg",
+        "x": 263,
+        "y": 433,
+        "ancho": 128,
+        "alto": 147
+    },
+    {
+        "imagen": "frutero.jpg",
+        "x": 466,
+        "y": 479,
+        "ancho": 152,
+        "alto": 112
+    },
+    {
+        "imagen": "frutero.jpg",
+        "x": 595,
+        "y": 379,
+        "ancho": 116,
+        "alto": 136
+    }
+]

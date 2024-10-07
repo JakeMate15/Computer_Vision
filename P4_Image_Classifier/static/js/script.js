@@ -1,11 +1,16 @@
+// script.js
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Elementos del DOM
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const btnCargar = document.getElementById('btnCargar');
     const btnGuardar = document.getElementById('btnGuardar');
     const btnAnalizar = document.getElementById('btnAnalizar');
     const selectorImagen = document.getElementById('selectorImagen');
+    const selectorCriterio = document.getElementById('selectorCriterio');
     const listaClases = document.getElementById('listaClases');
+    const contenedorResultados = document.getElementById('contenedorResultados');
 
     let imagen = new Image();
     let seleccion = {};
@@ -22,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function cargarImagen() {
+        // Limpiar coordenadas guardadas en el servidor
         fetch('/limpiar-coordenadas', {
             method: 'POST',
             headers: {
@@ -34,7 +40,9 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => manejarError('Error al limpiar coordenadas', error));
 
+        // Limpiar la lista de clases
         listaClases.innerHTML = '';
+        contenedorResultados.innerHTML = ''; // Limpiar resultados anteriores
 
         const nombreImagen = selectorImagen.value;
         imagen.src = '/static/imagenes/' + nombreImagen;
@@ -77,13 +85,15 @@ document.addEventListener('DOMContentLoaded', function() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(imagen, 0, 0);
 
-        const x = seleccion.xInicio;
-        const y = seleccion.yInicio;
-        const ancho = seleccion.xFin - seleccion.xInicio;
-        const alto = seleccion.yFin - seleccion.yInicio;
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(x, y, ancho, alto);
+        if (seleccion.xInicio != null && seleccion.xFin != null && seleccion.yInicio != null && seleccion.yFin != null) {
+            const x = seleccion.xInicio;
+            const y = seleccion.yInicio;
+            const ancho = seleccion.xFin - seleccion.xInicio;
+            const alto = seleccion.yFin - seleccion.yInicio;
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x, y, ancho, alto);
+        }
     }
 
     btnGuardar.addEventListener('click', function() {
@@ -166,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        if (!seleccion.xInicio || !seleccion.xFin || !seleccion.yInicio || !seleccion.yFin) {
+        if (seleccion.xInicio == null || seleccion.xFin == null || seleccion.yInicio == null || seleccion.yFin == null) {
             alert("Por favor selecciona una sección antes de analizar.");
             return;
         }
@@ -181,12 +191,15 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        const criterioSeleccionado = selectorCriterio.value;
+
         let seccionSeleccionada = {
             imagen: selectorImagen.value,
             x: x,
             y: y,
             ancho: ancho,
-            alto: alto
+            alto: alto,
+            criterio: criterioSeleccionado
         };
 
         fetch('/analizar-seccion', {
@@ -198,15 +211,59 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            alert(data.mensaje);
-            if (data.resultado) {
-                let resultadoImg = new Image();
-                resultadoImg.src = '/' + data.resultado;
-                resultadoImg.onload = function() {
-                    ctx.drawImage(resultadoImg, 0, 0);
-                };
-            }
+            // mostrarResultadosAnalisis(data);
+            console.log(data);
         })
         .catch(error => manejarError('Error al analizar la sección', error));
     });
+
+    function mostrarResultadosAnalisis(data) {
+        contenedorResultados.innerHTML = ''; // Limpiar resultados anteriores
+
+        // Crear la tabla
+        const table = document.createElement('table');
+        table.classList.add('tabla-resultados');
+
+        // Crear el encabezado de la tabla
+        const header = document.createElement('tr');
+        header.innerHTML = `
+            <th>Clase</th>
+            <th>Probabilidad Normalizada</th>
+            <th>Pertenece a la Clase</th>
+        `;
+        table.appendChild(header);
+
+        // Iterar sobre las clases y agregar filas a la tabla
+        data.classes.forEach((classResult) => {
+            const row = document.createElement('tr');
+
+            const classCell = document.createElement('td');
+            classCell.textContent = `Clase ${classResult.class_index + 1}`;
+
+            const probabilityNormCell = document.createElement('td');
+            probabilityNormCell.textContent = classResult.probability_normalized.toFixed(2) + '%';
+
+            const belongsCell = document.createElement('td');
+            belongsCell.textContent = classResult.belongs_to_class ? 'Sí' : 'No';
+
+            row.appendChild(classCell);
+            row.appendChild(probabilityNormCell);
+            row.appendChild(belongsCell);
+
+            table.appendChild(row);
+        });
+
+        contenedorResultados.appendChild(table);
+
+        // Mostrar un resumen indicando la clase asignada
+        const summary = document.createElement('p');
+        if (data.belongs_to_any_class) {
+            const assignedClassIndex = data.assigned_class + 1;
+            summary.textContent = `El punto pertenece a la Clase ${assignedClassIndex} con una probabilidad de ${data.classes[data.assigned_class].probability_normalized.toFixed(2)}%.`;
+        } else {
+            summary.textContent = 'El punto no pertenece a ninguna clase.';
+        }
+        contenedorResultados.appendChild(summary);
+    }
+
 });

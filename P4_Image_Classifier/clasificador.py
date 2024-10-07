@@ -218,15 +218,14 @@ def getNB(probs):
     total = np.sum(probs)
     probs[:] = (probs / total) * 100.0
 
-
 def analisis(imagen, coordenadas_guardadas, x, y, ancho, alto):
     ruta_imagen = f'static/imagenes/{imagen}'
-    
+
     img = cv2.imread(ruta_imagen)
 
     if img is None:
         raise FileNotFoundError(f"No se pudo cargar la imagen en la ruta: {ruta_imagen}")
-    
+
     x = int(x)
     y = int(y)
     ancho = int(ancho)
@@ -234,12 +233,12 @@ def analisis(imagen, coordenadas_guardadas, x, y, ancho, alto):
     seccionParaAnalizar = img[y:y+alto, x:x+ancho]
     if seccionParaAnalizar.size == 0:
         raise ValueError("La sección para analizar es inválida.")
-    
+
     (b_punto, g_punto, r_punto) = cv2.split(seccionParaAnalizar)
     punto = np.array([r_punto.mean(), g_punto.mean(), b_punto.mean()])
-    
+
     resultados = []
-    
+
     for cord in coordenadas_guardadas:
         xG = int(cord['x'])
         yG = int(cord['y'])
@@ -253,11 +252,11 @@ def analisis(imagen, coordenadas_guardadas, x, y, ancho, alto):
             continue
 
         (b, g, r) = cv2.split(region)
-        data = np.array([r.flatten(), g.flatten(), b.flatten()]) 
+        data = np.array([r.flatten(), g.flatten(), b.flatten()])
 
         clase_obj = Clase(data=data)
         clase_obj.setPunto(punto)
-        
+
         try:
             mahala_distance = clase_obj.mahalanobis()
             probabilidad = clase_obj.proB()
@@ -270,11 +269,16 @@ def analisis(imagen, coordenadas_guardadas, x, y, ancho, alto):
         euclidean_distance = np.linalg.norm(punto - centroid)
 
         resultados.append([mahala_distance, euclidean_distance, probabilidad])
-    
+
     resultados = np.array(resultados)  # (n_clases, 3)
 
     probs = resultados[:, 2]
-    getNB(probs)
-    resultados[:, 2] = probs
+    # print(probs)
 
+    if np.max(probs) <= 1e-7:
+        resultados[:, 2] = 0
+        # print("El máximo de 'probs' es <= 1e-7. Se han establecido todas las probabilidades a 0.")
+    else:
+        getNB(probs)
+        resultados[:, 2] = probs
     return resultados

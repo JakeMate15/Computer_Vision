@@ -1,9 +1,11 @@
-/* General */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 h1, h2 {
@@ -23,15 +25,14 @@ h2 {
 .contenedor-principal {
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Altura de toda la ventana */
+    flex-grow: 1;
+    padding: 20px;
 }
 
 /* Sección superior que divide en dos columnas (izquierda y derecha) */
 .seccion-superior {
     display: flex;
-    flex: 2;
     justify-content: space-between;
-    padding: 20px;
 }
 
 /* Estilos para la sección izquierda (selector, canvas y botones) */
@@ -72,7 +73,6 @@ h2 {
     border-radius: 4px;
 }
 
-/* Botones debajo del canvas */
 .botones {
     margin-top: 20px;
 }
@@ -126,23 +126,35 @@ td img {
     border-radius: 4px;
 }
 
-/* Sección inferior para los resultados del análisis */
-.seccion-inferior {
-    flex: 1;
+.footer-analisis {
     padding: 20px;
-    background-color: #ffffff;
-    border-top: 1px solid #ddd;
-    overflow-y: auto;
+    background-color: #f9f9f9;
+    border-top: 10px;
 }
 
-#contenedorResultados {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+
+/* Estilos para la tabla de resultados */
+.tabla-resultados {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
 }
 
-#contenedorResultados img {
-    width: 150px;
+.tabla-resultados th, .tabla-resultados td {
     border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+}
+
+.tabla-resultados th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.tabla-resultados tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tabla-resultados tr:hover {
+    background-color: #e2e2e2;
 }
