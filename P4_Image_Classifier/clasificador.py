@@ -282,3 +282,4 @@ def analisis(imagen, coordenadas_guardadas, x, y, ancho, alto):
         getNB(probs)
         resultados[:, 2] = probs
     return resultados
+

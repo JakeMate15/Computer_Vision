@@ -96,6 +96,8 @@ def procesar():
         }
         resultados_json.append(resultado_dict)
 
+    print(resultados_json)
+
     # Devolver la respuesta JSON
     return jsonify({"resultados": resultados_json}), 200
 
