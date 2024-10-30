@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from Evaluador import evaluar
 
 class CovarianceMatrixNotInvertibleError(Exception):
     """Excepción lanzada cuando la matriz de covarianza no es invertible."""
@@ -239,6 +240,11 @@ def analisis(imagen, coordenadas_guardadas, x, y, ancho, alto):
 
     resultados = []
 
+    # Clases y etiquetas
+    individuos = {}
+    idxId = 0
+    idxClase = 0
+
     for cord in coordenadas_guardadas:
         xG = int(cord['x'])
         yG = int(cord['y'])
@@ -253,6 +259,17 @@ def analisis(imagen, coordenadas_guardadas, x, y, ancho, alto):
 
         (b, g, r) = cv2.split(region)
         data = np.array([r.flatten(), g.flatten(), b.flatten()])
+
+        # print(data.shape)
+
+
+        for i in range(len(data[0])):
+            individuos[idxId] = {
+                'individuo': data[:, i].tolist(),
+                'label': idxClase,
+            }
+            idxId += 1
+        idxClase += 1
 
         clase_obj = Clase(data=data)
         clase_obj.setPunto(punto)
@@ -275,6 +292,9 @@ def analisis(imagen, coordenadas_guardadas, x, y, ancho, alto):
     probs = resultados[:, 2]
     # print(probs)
 
+    evaluacion = evaluar(individuos, idxClase)
+    # print(idxClase)
+
     if np.max(probs) <= 1e-7:
         resultados[:, 2] = 0
         # print("El máximo de 'probs' es <= 1e-7. Se han establecido todas las probabilidades a 0.")
@@ -282,5 +302,3 @@ def analisis(imagen, coordenadas_guardadas, x, y, ancho, alto):
         getNB(probs)
         resultados[:, 2] = probs
     return resultados
-
-

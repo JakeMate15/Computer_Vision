@@ -5,9 +5,7 @@ import os
 import json
 import cv2
 from werkzeug.utils import send_file
-
 import clasificador
-
 app = Flask(__name__)
 
 DIRECTORIO_IMAGENES = os.path.join(app.static_folder, 'imagenes')
@@ -96,7 +94,7 @@ def procesar():
         }
         resultados_json.append(resultado_dict)
 
-    print(resultados_json)
+    # print(resultados_json)
 
     # Devolver la respuesta JSON
     return jsonify({"resultados": resultados_json}), 200
