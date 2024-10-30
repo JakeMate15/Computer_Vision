@@ -47,24 +47,9 @@ def Resust(X, y, k):
     evMaha = evaluacion(y, y_pred_maha)
     evEuc = evaluacion(y, y_pred_eu)
 
-    print("Evaluación de los clasificadores:")
-    print(f"Máxima Probabilidad: Recall = {evProb[2]:.4f}")
-    print(f"Distancia Mahalanobis: Recall = {evMaha[2]:.4f}")
-    print(f"Distancia Euclidiana: Recall = {evEuc[2]:.4f}")
-
-    # Determinar el mejor clasificador basado en el recall
-    mejor_clasificador = "Máxima Probabilidad"
-    mejor_recall = evProb[2]
-
-    if evMaha[2] > mejor_recall:
-        mejor_clasificador = "Distancia Mahalanobis"
-        mejor_recall = evMaha[2]
-
-    if evEuc[2] > mejor_recall:
-        mejor_clasificador = "Distancia Euclidiana"
-        mejor_recall = evEuc[2]
-
-    print(f"\nMejor clasificador: {mejor_clasificador} con un Recall de {mejor_recall:.4f}")
+    print(evProb)
+    print(evMaha)
+    print(evEuc)
 
 
 def validacionCruzada(X, y, k, n_splits=5):
@@ -197,6 +182,9 @@ def unoFuera(X, y, k):
         y_pred_prob.append(pred_prob)
         y_pred_maha.append(pred_maha)
         y_pred_eu.append(pred_eu)
+
+        if (i + 1) % 100 == 0 or (i + 1) == n_samples:
+            print(f"Procesado {i + 1}/{n_samples} muestras...")
 
     # Convertir las listas a arrays numpy
     y_true = np.array(y_true)
