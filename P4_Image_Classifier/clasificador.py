@@ -283,3 +283,4 @@ def analisis(imagen, coordenadas_guardadas, x, y, ancho, alto):
         resultados[:, 2] = probs
     return resultados
 
+
