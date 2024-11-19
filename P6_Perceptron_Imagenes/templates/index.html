@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Aplicación de Análisis de Imágenes</title>
+    <link rel="stylesheet" href="../static/css/estilos.css">
+</head>
+<body>
+    <div class="contenedor-principal">
+        <!-- Sección superior dividida en dos -->
+        <div class="seccion-superior">
+            <!-- Parte izquierda (selector de imagen, canvas, botones) -->
+            <div class="seccion-izquierda">
+                <h1>Selecciona una imagen</h1>
+                <div class="selector-contenedor">
+                    <label for="selectorImagen">Imágenes:</label>
+                    <select id="selectorImagen">
+                        {% for imagen in imagenes %}
+                        <option value="{{ imagen }}">{{ imagen }}</option>
+                        {% endfor %}
+                    </select>
+                    <button id="btnCargar">Cargar Imagen</button>
+                </div>
+
+                <!-- Botones y opciones para guardar y analizar -->
+                <div class="botones">
+                    <button id="btnGuardar">Guardar Coordenadas</button>
+                    <button id="btnAnalizar">Analizar Sección</button>
+                    <label for="selectorCriterio">Criterio de Clasificación:</label>
+                    <select id="selectorCriterio">
+                        <option value="probabilidad">Probabilidad</option>
+                        <option value="mahalanobis">Distancia Mahalanobis</option>
+                        <option value="euclidiana">Distancia Euclidiana</option>
+                    </select>
+                </div>
+
+                <canvas id="canvas" width="800" height="600" style="border:1px solid #000;"></canvas>
+            </div>
+
+            <!-- Parte derecha (tabla de clases) -->
+            <div class="seccion-derecha">
+                <h2>Clases generadas</h2>
+                <div id="contenedorClases">
+                    <table id="tablaClases">
+                        <thead>
+                            <tr>
+                                <th>Clase</th>
+                                <th>Imagen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaClases">
+                            <!-- Aquí se agregarán las clases dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer para los resultados del análisis -->
+    <footer class="footer-analisis">
+        <h2>Resultados del análisis</h2>
+        <div id="contenedorResultados">
+            <!-- Aquí se mostrarán los resultados del análisis (imágenes o información) -->
+        </div>
+    </footer>
+
+
+    <!-- Script principal -->
+    <script src="../static/js/script.js"></script>
+</body>
+</html>

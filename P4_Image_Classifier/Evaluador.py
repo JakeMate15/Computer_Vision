@@ -8,12 +8,15 @@ def evaluar(data, k):
     X = np.array([info['individuo'] for info in data.values()])
     y = np.array([info['label'] for info in data.values()])
 
+    print("==============================================")
     print("Evaluación con resubstitución:")
     Resust(X, y, k)
 
+    print("\n\n==============================================")
     print("\nEvaluación con validación cruzada:")
     validacionCruzada(X, y, k, n_splits=5)
 
+    print("\n\n==============================================")
     print("\nEvaluación con Leave-One-Out Cross-Validation:")
     unoFuera(X, y, k)
 
@@ -39,6 +42,7 @@ def evaluacion(y_verdadero, y_predicho):
 
 def Resust(X, y, k):
     c = Clasificador(X, y, k)
+
     y_pred_prob = c.maxProb(X)
     y_pred_maha = c.distMahalanobis(X)
     y_pred_eu = c.distEuclideana(X)
@@ -47,9 +51,9 @@ def Resust(X, y, k):
     evMaha = evaluacion(y, y_pred_maha)
     evEuc = evaluacion(y, y_pred_eu)
 
-    print(evProb)
-    print(evMaha)
-    print(evEuc)
+    print(evProb[2])
+    print(evMaha[2])
+    print(evEuc[2])
 
 
 def validacionCruzada(X, y, k, n_splits=5):
@@ -183,7 +187,7 @@ def unoFuera(X, y, k):
         y_pred_maha.append(pred_maha)
         y_pred_eu.append(pred_eu)
 
-        if (i + 1) % 100 == 0 or (i + 1) == n_samples:
+        if (i + 1) % 1000 == 0 or (i + 1) == n_samples:
             print(f"Procesado {i + 1}/{n_samples} muestras...")
 
     # Convertir las listas a arrays numpy
