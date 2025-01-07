@@ -1,0 +1,14 @@
+h1 {
+    text-align: center;
+    font-size: 2.5em;
+    color: #3f51b5; /* Azul oscuro */
+    margin: 20px auto;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Contenedor principal para el contenido */
+  router-outlet {
+    display: block;
+    margin: 0 auto;
+  }
+  

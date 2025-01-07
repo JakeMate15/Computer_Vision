@@ -1,8 +1,32 @@
 div {
     text-align: center;
-}
-
-button {
-    margin: 5px;
-}
+    margin: 40px auto;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  h2 {
+    font-size: 1.8em;
+    color: #444444;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    background-color: #3f51b5; /* Azul oscuro */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #303f9f; /* Azul más oscuro */
+  }
+  
+  button:active {
+    transform: scale(0.98);
+  }
   

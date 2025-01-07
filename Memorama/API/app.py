@@ -17,8 +17,8 @@ def validate():
         return jsonify({'error': 'Faltan nombres de cartas'}), 400
 
     # Validación ficticia: Puedes reemplazar esto con tu lógica real
-    # result = random.choice([True, False])
-    result = False
+    result = random.choice([True, False])
+    # result = False
 
     print(f"Card1: {card1}, Card2: {card2}, Valid: {result}")
 

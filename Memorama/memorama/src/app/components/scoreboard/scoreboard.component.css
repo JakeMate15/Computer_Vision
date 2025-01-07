@@ -1,4 +1,73 @@
-div {
-    text-align: center;
-}
+/* Contenedor principal del scoreboard */
+.scoreboard {
+    display: flex;
+    justify-content: space-around; /* Espacio uniforme entre jugadores */
+    align-items: center;
+    background-color: #ffffff; /* Fondo blanco */
+    padding: 20px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    margin: 20px auto; /* Centrar y espaciar del resto */
+    max-width: 600px; /* Ancho máximo para pantallas grandes */
+  }
+  
+  /* Estilos para cada jugador */
+  .player {
+    display: flex;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Icono del jugador */
+  .player-icon {
+    font-size: 2em;
+    margin-right: 10px;
+  }
+  
+  /* Nombre del jugador */
+  .player-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #555555;
+    margin-right: 5px;
+  }
+  
+  /* Puntuación del jugador */
+  .player-score {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333333;
+  }
+  
+  /* Estilos específicos para Jugador 1 */
+  .player1 {
+    border-right: 2px solid #e0e0e0; /* Línea divisoria */
+    padding-right: 20px;
+  }
+  
+  /* Estilos específicos para Jugador 2 */
+  .player2 {
+    padding-left: 20px;
+  }
+  
+  /* Responsive Design: Ajustes para pantallas pequeñas */
+  @media (max-width: 600px) {
+    .scoreboard {
+      flex-direction: column; /* Apilar jugadores verticalmente */
+      padding: 20px;
+    }
+  
+    .player {
+      margin: 10px 0; /* Espacio entre jugadores */
+    }
+  
+    .player1 {
+      border-right: none;
+      padding-right: 0;
+    }
+  
+    .player2 {
+      padding-left: 0;
+    }
+  }
   
