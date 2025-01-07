@@ -1,0 +1,5 @@
+1.png == 1_2.png
+2 _2.png == 2.png
+3.png == 3_2.png
+4.png == 4_2.png
+5.png == 5_2.png

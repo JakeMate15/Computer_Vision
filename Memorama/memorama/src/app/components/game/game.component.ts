@@ -1,22 +1,25 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { HttpClient } from '@angular/common/http'
+import { CommonModule } from '@angular/common'
+import { ScoreboardComponent } from '../scoreboard/scoreboard.component'
 import { ValidationService } from '../../services/validation.service'
 import { Card } from '../../models/card'
-import { CommonModule, NgIf, NgFor } from '@angular/common'
-import { ScoreboardComponent } from '../scoreboard/scoreboard.component'
-import { TimerComponent } from '../timer/timer.component'
+import { HttpClient } from '@angular/common/http'
+import { Observable } from 'rxjs'
+import { map, catchError } from 'rxjs/operators'
+
+interface Pair {
+  images: string[]
+}
+
+interface PairsData {
+  pairs: Pair[]
+}
 
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [
-    CommonModule,
-    NgIf,
-    NgFor,
-    ScoreboardComponent,
-    TimerComponent
-  ],
+  imports: [CommonModule, ScoreboardComponent],
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
@@ -28,62 +31,64 @@ export class GameComponent implements OnInit {
   currentPlayer = 1
   player1Score = 0
   player2Score = 0
-  timePerTurn = 10
-  gameDuration = 120
-  intervalId: any
-  timerCount = 0
+  allPairs: Pair[] = []
+  gameEnded = false
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private validationService: ValidationService
+    private validationService: ValidationService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.totalCards = +params['cardsCount']
-      this.loadCards()
-      this.startGameTimer()
+      if (this.totalCards % 2 !== 0) {
+        alert('El número de cartas debe ser par.')
+        return
+      }
+      this.loadPairs().subscribe(() => {
+        this.loadCards()
+        // Eliminado: this.startGameTimer()
+      })
     })
   }
 
-  loadCards() {
-    const jsonPath = 'assets/images/pairs.json'
-    this.http.get<{ pairs: { images: string[] }[] }>(jsonPath)
-      .subscribe(data => {
-        const totalPairs = this.totalCards / 2
-        const selectedPairs = this.getRandomElements(data.pairs, totalPairs)
-
-        const temp: Card[] = []
-        let cardId = 0
-
-        selectedPairs.forEach(pair => {
-          pair.images.forEach(img => {
-            temp.push({
-              id: cardId++,
-              image: `assets/images/${img}`,
-              flipped: false,
-              matched: false
-            })
-          })
-        })
-
-        this.cards = this.shuffleArray(temp)
+  loadPairs(): Observable<void> {
+    return this.http.get<PairsData>('assets/images/pairs.json').pipe(
+      map(data => {
+        this.allPairs = data.pairs
+      }),
+      catchError(error => {
+        console.error('Error al cargar pairs.json:', error)
+        alert('No se pudieron cargar las parejas de cartas.')
+        throw error
       })
+    )
   }
 
-  getRandomElements<T>(array: T[], n: number): T[] {
-    const copy = [...array]
-    const result: T[] = []
-    while (n > 0 && copy.length) {
-      const index = Math.floor(Math.random() * copy.length)
-      result.push(copy.splice(index, 1)[0])
-      n--
+  loadCards() {
+    const numberOfPairs = this.totalCards / 2
+    if (numberOfPairs > this.allPairs.length) {
+      alert('No hay suficientes parejas en el archivo JSON para el número de cartas seleccionadas.')
+      return
     }
-    return result
+    const selectedPairs = this.shuffleArray<Pair>([...this.allPairs]).slice(0, numberOfPairs)
+    const temp: Card[] = []
+    selectedPairs.forEach((pair: Pair, index: number) => {
+      pair.images.forEach((image: string) => {
+        temp.push({
+          id: index * 2 + temp.length,
+          image: `assets/images/${image}`,
+          flipped: false,
+          matched: false
+        })
+      })
+    })
+    this.cards = this.shuffleArray<Card>(temp)
   }
 
-  shuffleArray(array: Card[]) {
+  shuffleArray<T>(array: T[]): T[] {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1))
       ;[array[i], array[j]] = [array[j], array[i]]
@@ -92,37 +97,41 @@ export class GameComponent implements OnInit {
   }
 
   selectCard(card: Card) {
-    if (card.flipped || this.selectedCards.length === 2) {
+    if (card.flipped || this.selectedCards.length === 2 || this.gameEnded) {
       return
     }
     card.flipped = true
     this.selectedCards.push(card)
+
     if (this.selectedCards.length === 2) {
-      this.validationService.validateCards(
-        this.selectedCards[0].image,
-        this.selectedCards[1].image
-      ).subscribe(valid => {
-        if (valid) {
-          if (this.selectedCards[0].image === this.selectedCards[1].image) {
-            this.selectedCards[0].matched = true
-            this.selectedCards[1].matched = true
+      const card1 = this.selectedCards[0].image
+      const card2 = this.selectedCards[1].image
+
+      this.validationService.validateCards(card1, card2).subscribe(
+        response => {
+          const valid = response.valid
+          const selected1 = this.selectedCards[0]
+          const selected2 = this.selectedCards[1]
+
+          if (valid) {
+            selected1.matched = true
+            selected2.matched = true
             this.addPoint()
           } else {
             setTimeout(() => {
-              this.selectedCards[0].flipped = false
-              this.selectedCards[1].flipped = false
+              selected1.flipped = false
+              selected2.flipped = false
             }, 1000)
           }
-        } else {
-          setTimeout(() => {
-            this.selectedCards[0].flipped = false
-            this.selectedCards[1].flipped = false
-          }, 1000)
+          this.selectedCards = []
+          this.changePlayer()
+          this.checkGameEnd()
+        },
+        error => {
+          console.error('Error en la validación de las cartas:', error)
+          alert('Ocurrió un error al validar las cartas. Por favor, intenta de nuevo.')
         }
-        this.selectedCards = []
-        this.changePlayer()
-        this.checkGameEnd()
-      })
+      )
     }
   }
 
@@ -141,23 +150,38 @@ export class GameComponent implements OnInit {
   checkGameEnd() {
     const allMatched = this.cards.every(card => card.matched)
     if (allMatched) {
-      alert('Fin del juego')
+      this.gameEnded = true
+      this.showWinner()
     }
   }
 
-  onTimeUp() {
-    this.changePlayer()
-    this.selectedCards.forEach(card => (card.flipped = false))
-    this.selectedCards = []
+  showWinner() {
+    let message = 'Fin del juego.\n'
+    if (this.player1Score > this.player2Score) {
+      message += 'Jugador 1 es el ganador!'
+    } else if (this.player2Score > this.player1Score) {
+      message += 'Jugador 2 es el ganador!'
+    } else {
+      message += 'Es un empate!'
+    }
+    const playAgain = confirm(`${message}\n¿Quieres jugar de nuevo?`)
+    if (playAgain) {
+      this.resetGame()
+    } else {
+      alert('Gracias por jugar!')
+    }
   }
 
-  startGameTimer() {
-    this.intervalId = setInterval(() => {
-      this.timerCount++
-      if (this.timerCount >= this.gameDuration) {
-        clearInterval(this.intervalId)
-        alert('Tiempo de juego finalizado')
-      }
-    }, 1000)
+  resetGame() {
+    this.cards = []
+    this.selectedCards = []
+    this.currentPlayer = 1
+    this.player1Score = 0
+    this.player2Score = 0
+    this.gameEnded = false
+    this.loadCards()
+    // Eliminado:
+    // clearInterval(this.intervalId)
+    // this.startGameTimer()
   }
 }

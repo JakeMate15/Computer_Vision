@@ -14,30 +14,21 @@ export class TimerComponent implements OnInit, OnDestroy {
   intervalId: any
 
   ngOnInit() {
-    this.currentTime = this.seconds
-    this.intervalId = setInterval(() => {
-      this.currentTime--
-      if (this.currentTime <= 0) {
-        clearInterval(this.intervalId)
-        this.timeUp.emit()
-        this.currentTime = this.seconds
-        this.start()
-      }
-    }, 1000)
+    this.resetTimer()
   }
 
   ngOnDestroy() {
     clearInterval(this.intervalId)
   }
 
-  start() {
+  resetTimer() {
+    clearInterval(this.intervalId)
+    this.currentTime = this.seconds
     this.intervalId = setInterval(() => {
       this.currentTime--
       if (this.currentTime <= 0) {
         clearInterval(this.intervalId)
         this.timeUp.emit()
-        this.currentTime = this.seconds
-        this.start()
       }
     }, 1000)
   }

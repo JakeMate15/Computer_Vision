@@ -1,0 +1,36 @@
+chiles
+IMG_6251.png == IMG_6291.png
+IMG_6252.png == IMG_6290.png
+IMG_6253.png == IMG_6289.png
+IMG_6254.png == IMG_6288.png
+IMG_6255.png == IMG_6287.png
+combinaciones
+IMG_6326.png == IMG_6327.png
+IMG_6328.png == IMG_6329.png
+IMG_6342.png == IMG_6343.png
+IMG_6344.png == IMG_6345.png
+IMG_6359.png == IMG_6360.png
+IMG_6368.png == IMG_6369.png
+IMG_6375.png == IMG_6376.png
+IMG_6379.png == IMG_6380.png
+cucharas
+IMG_6267.png == IMG_6296.png
+IMG_6270.png == IMG_6293.png
+cuchillos
+1.png == 1_2.png
+2_2.png == 2.png
+3.png == 3_2.png
+4.png == 4_2.png
+5.png == 5_2.png
+limones
+IMG_6272.png == IMG_6277.png
+IMG_6273.png == IMG_6278.png
+IMG_6274.png == IMG_6279.png
+IMG_6275.png == IMG_6280.png
+IMG_6276.png == IMG_6281.png
+tenedores
+IMG_6313.png == IMG_6322.png
+IMG_6314.png == IMG_6323.png
+IMG_6315.png == IMG_6324.png
+IMG_6316.png == IMG_6325.png
+IMG_6317.png == IMG_6325_.png

@@ -1,22 +1,19 @@
 <div>
-    <h2>Jugador {{ currentPlayer }}</h2>
-    <app-scoreboard
-      [player1Score]="player1Score"
-      [player2Score]="player2Score"
-    ></app-scoreboard>
-    <app-timer
-      [seconds]="timePerTurn"
-      (timeUp)="onTimeUp()"
-    ></app-timer>
-    <div class="cards-container">
-      <div
-        class="card"
-        *ngFor="let card of cards"
-        (click)="selectCard(card)"
-      >
-        <img *ngIf="!card.flipped" [src]="reversoImg" />
-        <img *ngIf="card.flipped" [src]="card.image" />
-      </div>
+  <h2>Jugador {{ currentPlayer }}</h2>
+  <app-scoreboard
+    [player1Score]="player1Score"
+    [player2Score]="player2Score"
+  ></app-scoreboard>
+  <!-- Eliminado el temporizador -->
+  <div class="cards-container">
+    <div
+      class="card"
+      *ngFor="let card of cards"
+      (click)="selectCard(card)"
+    >
+      <img *ngIf="!card.flipped" [src]="reversoImg" />
+      <img *ngIf="card.flipped" [src]="card.image" />
     </div>
   </div>
-  
+  <!-- Eliminado la visualización del temporizador de juego -->
+</div>
