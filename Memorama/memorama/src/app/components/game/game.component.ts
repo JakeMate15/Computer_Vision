@@ -23,7 +23,7 @@ import { TimerComponent } from '../timer/timer.component'
 export class GameComponent implements OnInit {
   cards: Card[] = []
   selectedCards: Card[] = []
-  reversoImg = 'assets/reverso.png'
+  reversoImg = '../assets/reverso.png'
   totalCards = 0
   currentPlayer = 1
   player1Score = 0

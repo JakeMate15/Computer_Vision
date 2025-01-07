@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core'
 
 @Component({
   selector: 'app-timer',
+  standalone: true,
   imports: [],
   templateUrl: './timer.component.html',
-  styleUrl: './timer.component.css'
+  styleUrls: ['./timer.component.css']
 })
 export class TimerComponent implements OnInit, OnDestroy {
   @Input() seconds = 10
