@@ -1,0 +1,10 @@
+Pesos iniciales: [0.5 1.  1. ]
+Se alcanzó el número máximo de iteraciones sin clasificar todos los puntos.
+Punto seleccionado: (83.61, 189.88)
+Salida del perceptrón: 231330.73 (positivo)
+Ecuación: -5231.50*x + 3521.00*y + 137.00 = 231330.73 (positivo)
+Clase predicha: 1
+Punto seleccionado: (166.91, 219.48)
+Salida del perceptrón: -100257.36 (negativo)
+Ecuación: -5231.50*x + 3521.00*y + 137.00 = -100257.36 (negativo)
+Clase predicha: 0

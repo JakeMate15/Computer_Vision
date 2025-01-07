@@ -1,0 +1,3 @@
+/home/erik/Documents/ESCOM/Computer_Vision/Examen/cmake-build-debug/CMakeFiles/Examen.dir
+/home/erik/Documents/ESCOM/Computer_Vision/Examen/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/erik/Documents/ESCOM/Computer_Vision/Examen/cmake-build-debug/CMakeFiles/rebuild_cache.dir

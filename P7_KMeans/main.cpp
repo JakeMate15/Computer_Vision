@@ -2,9 +2,10 @@
 #include <opencv2/opencv.hpp>
 using namespace std;
 
-const int ITERACIONES = 50;
-const string FILENAME = "/home/erik/Documents/ESCOM/Computer_Vision/P7_KMeans/src/jp.jpg";
+const int MAX_ITERACIONES = 50;
+const string FILENAME = "/home/erik/Documents/ESCOM/Computer_Vision/P7_KMeans/src/ex.png";
 
+// Función para convertir HSV a BGR
 cv::Scalar HSVtoBGR(float H, float S, float V) {
     float C = V * S;
     float X = C * (1 - abs(fmod(H / 60.0, 2) - 1));
@@ -38,20 +39,25 @@ cv::Scalar HSVtoBGR(float H, float S, float V) {
     return cv::Scalar(B, G, R);
 }
 
-vector<pair<int, cv::Point>> KMeans (int k, int n, vector<pair<cv::Point, cv::Vec3b>> puntos) {
+// Función KMeans con visualización y detección de convergencia
+vector<pair<int, cv::Point>> KMeans(int k, int n, const vector<pair<cv::Point, cv::Vec3b>>& puntos,
+                                   const cv::Mat& img_original) {
     vector<cv::Vec3b> centroides;
-    vector<pair<int, cv::Point>> clases(n);
+    vector<pair<int, cv::Point>> clases(n, { -1, cv::Point() });
 
+    // Inicializar las clases con los puntos proporcionados
     for (int i = 0; i < n; i++) {
         clases[i].second = puntos[i].first;
     }
 
+    // Inicializar centroides aleatoriamente
     srand(time(0));
     for (int i = 0; i < k; i++) {
         centroides.push_back(puntos[rand() % puntos.size()].second);
     }
 
-    auto distancia = [] (cv::Vec3b a, cv::Vec3b b) {
+    // Definir la función de distancia
+    auto distancia = [] (const cv::Vec3b& a, const cv::Vec3b& b) -> double {
         return sqrt(
             pow(a[0] - b[0], 2) +
             pow(a[1] - b[1], 2) +
@@ -59,7 +65,25 @@ vector<pair<int, cv::Point>> KMeans (int k, int n, vector<pair<cv::Point, cv::Ve
         );
     };
 
-    for (int iter = 0; iter < ITERACIONES; iter++) {
+    bool cambio = true;
+    int iter = 0;
+    vector<cv::Scalar> colores;
+    const float golden_angle = 137.5;
+
+    // Generar colores únicos para cada clúster
+    for (int i = 0; i < k; i++) {
+        float H = fmod(i * golden_angle, 360.0);
+        float S = 0.9;
+        float V = 0.9;
+        colores.push_back(HSVtoBGR(H, S, V));
+    }
+
+    // Crear una copia de la imagen para marcar los puntos
+    cv::Mat img_marked = img_original.clone();
+
+    while (iter < MAX_ITERACIONES && cambio) {
+        cambio = false;
+
         // Asignar cada punto al centroide más cercano
         for (int i = 0; i < n; i++) {
             double min_dist = std::numeric_limits<double>::max();
@@ -71,7 +95,10 @@ vector<pair<int, cv::Point>> KMeans (int k, int n, vector<pair<cv::Point, cv::Ve
                     min_class = j;
                 }
             }
-            clases[i].first = min_class;
+            if (clases[i].first != min_class) {
+                cambio = true;
+                clases[i].first = min_class;
+            }
         }
 
         // Recalcular los centroides
@@ -88,16 +115,35 @@ vector<pair<int, cv::Point>> KMeans (int k, int n, vector<pair<cv::Point, cv::Ve
 
         for (int j = 0; j < k; j++) {
             if (count_centroides[j] > 0) {
-                centroides[j][0] = sum_centroides[j][0] / count_centroides[j];
-                centroides[j][1] = sum_centroides[j][1] / count_centroides[j];
-                centroides[j][2] = sum_centroides[j][2] / count_centroides[j];
+                centroides[j][0] = static_cast<uchar>(sum_centroides[j][0] / count_centroides[j]);
+                centroides[j][1] = static_cast<uchar>(sum_centroides[j][1] / count_centroides[j]);
+                centroides[j][2] = static_cast<uchar>(sum_centroides[j][2] / count_centroides[j]);
             }
         }
+
+        // Visualizar el estado actual de la clasificación
+        img_marked = img_original.clone();
+        for (int i = 0; i < n; i++) {
+            cv::circle(img_marked, clases[i].second, 2, colores[clases[i].first], -1);
+        }
+
+        // Dibujar los centroides
+        for (int j = 0; j < k; j++) {
+            cv::circle(img_marked, clases[j].second, 5, cv::Scalar(255, 255, 255), -1);
+            // Opcional: Dibujar centroides en colores distintos o marcadores especiales
+        }
+
+        // Mostrar la imagen actualizada
+        cv::imshow("KMeans Iteracion", img_marked);
+        cv::waitKey(100); // Espera 100 ms entre iteraciones
+
+        iter++;
     }
+
+    cout << "KMeans convergió en " << iter << " iteraciones." << endl;
 
     return clases;
 }
-
 
 int main() {
     cv::Mat img_original = cv::imread(FILENAME);
@@ -106,6 +152,16 @@ int main() {
         return -1;
     }
 
+    // Redimensionar la imagen si es necesario
+    int max_dim = 500;
+    int original_width = img_original.cols;
+    int original_height = img_original.rows;
+    if (original_width > max_dim || original_height > max_dim) {
+        double scale = std::min(static_cast<double>(max_dim) / original_width, static_cast<double>(max_dim) / original_height);
+        cv::resize(img_original, img_original, cv::Size(), scale, scale);
+    }
+
+    // Clonar la imagen para visualizaciones
     cv::Mat img_sin_etiquetar = img_original.clone();
     cv::Mat img_marked_points = img_original.clone();
 
@@ -116,61 +172,62 @@ int main() {
     vector<pair<cv::Point, cv::Vec3b>> puntos;
     srand(time(0));
 
+    // Definir colores específicos (opcional)
+    cv::Vec3b c1 = cv::Vec3b(202, 12, 0), c2 = cv::Vec3b(92, 0, 202), c3 = cv::Vec3b(0, 202, 98);
+
     for (int i = 0; i < n; i++) {
-        int x = rand() % img_original.cols;
-        int y = rand() % img_original.rows;
+        cv::Point punto;
+        cv::Vec3b color;
+        while (true) {
+            int x = rand() % img_original.cols;
+            int y = rand() % img_original.rows;
 
-        cv::Point punto(x, y);
-        cv::Vec3b color = img_original.at<cv::Vec3b>(y, x);
-        puntos.push_back({punto, color});
+            punto = cv::Point(x, y);
+            color = img_original.at<cv::Vec3b>(punto);
 
+            int avg = (color[0] + color[1] + color[2]) / 3;
+
+            if (color == c1 || color == c2 || color == c3) {
+                break;
+            }
+        }
+
+        puntos.emplace_back(punto, color);
         cv::circle(img_sin_etiquetar, punto, 1, cv::Scalar(0, 0, 0), 2);
     }
 
-    auto clasificacion = KMeans(k, n, puntos);
+    // Ejecutar KMeans con visualización
+    auto clasificacion = KMeans(k, n, puntos, img_original);
 
-    vector<cv::Scalar> colores(k); // Inicializa con k elementos
+    // Asignar colores a cada clúster para la visualización final
+    vector<cv::Scalar> colores_final(k);
     const float golden_angle = 137.5;
     for (int i = 0; i < k; i++) {
         float H = fmod(i * golden_angle, 360.0);
         float S = 0.9;
         float V = 0.9;
-        colores[i] = HSVtoBGR(H, S, V); // Asigna directamente al índice i
+        colores_final[i] = HSVtoBGR(H, S, V);
     }
 
-    for (const auto &[clase, punto]: clasificacion) {
-        cv::circle(img_marked_points, punto, 1, colores[clase], 2);
+    // Dibujar los puntos clasificados en la imagen final
+    for (const auto &[clase, punto] : clasificacion) {
+        cv::circle(img_marked_points, punto, 2, colores_final[clase], -1);
     }
 
-    // cv::Size tamaño_deseado(400, 400);
-
-    // cv::imshow("Imagen Original", img_original);
-    // cv::imshow("Imagen sin etiquetar", img_sin_etiquetar);
-    // cv::imshow("Imagen con Puntos Marcados", img_marked_points);
-
+    // Crear ventanas para mostrar las imágenes
     cv::namedWindow("Imagen Original", cv::WINDOW_NORMAL);
     cv::namedWindow("Imagen sin etiquetar", cv::WINDOW_NORMAL);
     cv::namedWindow("Imagen con Puntos Marcados", cv::WINDOW_NORMAL);
 
-    // Opcional: Ajustar el tamaño de las ventanas
+    // Ajustar el tamaño de las ventanas
     cv::resizeWindow("Imagen Original", 800, 600);
     cv::resizeWindow("Imagen sin etiquetar", 800, 600);
     cv::resizeWindow("Imagen con Puntos Marcados", 800, 600);
 
-    // Mostrar las imágenes
+    // Mostrar las imágenes finales
     cv::imshow("Imagen Original", img_original);
     cv::imshow("Imagen sin etiquetar", img_sin_etiquetar);
     cv::imshow("Imagen con Puntos Marcados", img_marked_points);
-
-    // cv::Mat concatenada_horizontal;
-    // cv::hconcat(std::vector<cv::Mat>{img_original, img_sin_etiquetar, img_marked_points}, concatenada_horizontal);
-    // cv::imshow("Todas las Imágenes", concatenada_horizontal);
-
-    // cout << "Puntos seleccionados y sus valores RGB:" << endl;
-    // for (const auto& p : puntos) {
-    //     cout << "Posición: (" << p.first.x << ", " << p.first.y
-    //          << "), RGB: (" << (int)p.second[2] << ", " << (int)p.second[1] << ", " << (int)p.second[0] << ")" << endl;
-    // }
 
     cv::waitKey(0);
     return 0;

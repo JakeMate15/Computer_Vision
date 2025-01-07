@@ -1,0 +1,3 @@
+/home/erik/Documents/ESCOM/Computer_Vision/P9_Ascendente/cmake-build-debug/CMakeFiles/P9_Ascendente.dir
+/home/erik/Documents/ESCOM/Computer_Vision/P9_Ascendente/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/erik/Documents/ESCOM/Computer_Vision/P9_Ascendente/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,4 @@
+/snap/clion/305/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/305/bin/ninja/linux/x64/ninja -G Ninja -S /home/erik/Documents/ESCOM/Computer_Vision/Examen -B /home/erik/Documents/ESCOM/Computer_Vision/Examen/cmake-build-debug
+-- Configuring done (1.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/erik/Documents/ESCOM/Computer_Vision/Examen/cmake-build-debug
