@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-
-import { Card } from '../../models/card'
+import { HttpClient } from '@angular/common/http'
 import { ValidationService } from '../../services/validation.service'
-import { CommonModule, NgFor, NgIf } from '@angular/common'
+import { Card } from '../../models/card'
+import { CommonModule, NgIf, NgFor } from '@angular/common'
 import { ScoreboardComponent } from '../scoreboard/scoreboard.component'
 import { TimerComponent } from '../timer/timer.component'
 
 @Component({
   selector: 'app-game',
+  standalone: true,
   imports: [
     CommonModule,
     NgIf,
@@ -17,13 +18,12 @@ import { TimerComponent } from '../timer/timer.component'
     TimerComponent
   ],
   templateUrl: './game.component.html',
-  styleUrl: './game.component.css'
+  styleUrls: ['./game.component.css']
 })
-
 export class GameComponent implements OnInit {
   cards: Card[] = []
   selectedCards: Card[] = []
-  reversoImg = '../assets/reverso.png'
+  reversoImg = 'assets/reverso.png'
   totalCards = 0
   currentPlayer = 1
   player1Score = 0
@@ -35,6 +35,7 @@ export class GameComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private http: HttpClient,
     private validationService: ValidationService
   ) {}
 
@@ -47,17 +48,39 @@ export class GameComponent implements OnInit {
   }
 
   loadCards() {
-    const imagesPath = `assets/images/${this.totalCards}`
-    const temp: Card[] = []
-    for (let i = 0; i < this.totalCards; i++) {
-      temp.push({
-        id: i,
-        image: `${imagesPath}/img${i % (this.totalCards / 2)}.png`,
-        flipped: false,
-        matched: false
+    const jsonPath = 'assets/images/pairs.json'
+    this.http.get<{ pairs: { images: string[] }[] }>(jsonPath)
+      .subscribe(data => {
+        const totalPairs = this.totalCards / 2
+        const selectedPairs = this.getRandomElements(data.pairs, totalPairs)
+
+        const temp: Card[] = []
+        let cardId = 0
+
+        selectedPairs.forEach(pair => {
+          pair.images.forEach(img => {
+            temp.push({
+              id: cardId++,
+              image: `assets/images/${img}`,
+              flipped: false,
+              matched: false
+            })
+          })
+        })
+
+        this.cards = this.shuffleArray(temp)
       })
+  }
+
+  getRandomElements<T>(array: T[], n: number): T[] {
+    const copy = [...array]
+    const result: T[] = []
+    while (n > 0 && copy.length) {
+      const index = Math.floor(Math.random() * copy.length)
+      result.push(copy.splice(index, 1)[0])
+      n--
     }
-    this.cards = this.shuffleArray(temp)
+    return result
   }
 
   shuffleArray(array: Card[]) {
