@@ -1,6 +1,6 @@
 export interface Card {
-    id: number
-    image: string
-    flipped: boolean
-    matched: boolean
+  id: number
+  image: string
+  flipped: boolean
+  matched: boolean
 }
